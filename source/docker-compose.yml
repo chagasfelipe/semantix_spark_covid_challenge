@@ -1,0 +1,230 @@
+version: '3' 
+services:
+
+  namenode:
+    image: fjardim/namenode_sqoop
+    container_name: namenode
+    hostname: namenode
+    volumes:
+      - ./data/hdfs/namenode:/hadoop/dfs/name
+      - ./input:/input
+    environment:
+      - CLUSTER_NAME=test
+    env_file:
+      - ./data/hadoop/hadoop-hive.env
+    ports:
+      - "50070:50070"
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+  
+  datanode:
+    image: fjardim/datanode
+    container_name: datanode
+    hostname: datanode
+    volumes:
+      - ./data/hdfs/datanode:/hadoop/dfs/data
+    env_file:
+      - ./data/hadoop/hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    depends_on:
+      - namenode
+    ports:
+      - "50075:50075"
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+  
+  hive-server:
+    image: fjardim/hive
+    container_name: hive-server
+    hostname: hive_server
+    env_file:
+      - ./data/hadoop/hadoop-hive.env
+    environment:
+      HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
+      SERVICE_PRECONDITION: "hive-metastore:9083"
+    ports:
+      - "10000:10000"
+    depends_on:
+      - hive-metastore
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+  
+  hive-metastore:
+    image: fjardim/hive
+    container_name: hive_metastore
+    hostname: hive_metastore
+    env_file:
+      - ./data/hadoop/hadoop-hive.env
+    command: /opt/hive/bin/hive --service metastore
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
+    ports:
+      - "9083:9083"
+    depends_on:
+      - hive-metastore-postgresql
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+  
+  hive-metastore-postgresql:
+    image: fjardim/hive-metastore
+    container_name: hive-metastore-postgresql
+    hostname: hive_metastore_postgresql
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/
+    depends_on:
+      - datanode
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+  
+  database:
+    image: fjardim/mysql
+    container_name: database
+    hostname: database
+    ports:
+        - "33061:3306"
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+    command: mysqld --innodb-flush-method=O_DSYNC --innodb-use-native-aio=OFF --init-file /data/application/init.sql
+    volumes:
+        - ./data/mysql/data:/var/lib/mysql
+        - ./data/mysql/init.sql:/data/application/init.sql
+    environment:
+        MYSQL_ROOT_USER: root
+        MYSQL_ROOT_PASSWORD: secret
+        MYSQL_DATABASE: hue
+        MYSQL_USER: root
+        MYSQL_PASSWORD: secret
+
+  zookeeper:
+    image: fjardim/zookeeper
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./data/zookeeper:/opt/zookeeper-3.4.6/data
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+
+  spark:
+    image: fjardim/jupyter-spark
+    hostname: spark
+    container_name: spark
+    command: notebook
+    env_file:
+      - ./data/jupyter/jupyter.env
+    ports:
+      - 8889:8889
+      - 4040:4040
+      - 4041:4041
+      - 4042:4042
+      - 4043:4043
+    volumes:       
+       - ../data:/mnt/notebooks/data/
+       - ../libs:/mnt/notebooks/libs/         
+       - ../project:/mnt/notebooks/project/        
+    environment:
+       SPARK_MASTER: local[*]
+       JUPYTER_PORT: 8889
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  kafka:
+    image: fjardim/kafka
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./data/kafka:/kafka/kafka-logs-kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+
+  kafkamanager:
+    image: fjardim/kafkamanager
+    container_name: kafkamanager
+    hostname: kafkamanager
+    environment:
+      ZK_HOSTS: zookeeper:2181
+    ports:
+      - 9000:9000
+    depends_on:
+      - kafka
+    deploy:
+      resources:
+        limits:
+          memory: 200m
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+    ports:
+      - "9200:9200"
+    volumes: 
+      - es-data:/usr/share/elasticsearch/data
+      - ./settings/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./data:/data
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1  
+    networks: 
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.2
+    volumes: 
+      - ./settings/kibana.yml:/usr/share/kibana/config/kibana.yml:ro   
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch       
+    networks: 
+      - elastic
+  
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.9.2
+    volumes:
+      - ./pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./settings/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+    ports:
+      - "9600:9600"
+      - "5044:5044"
+    depends_on: 
+      - elasticsearch  
+    networks:
+      - elastic        
+
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  es-data:
+    driver: local
+
