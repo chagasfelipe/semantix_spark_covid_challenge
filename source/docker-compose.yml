@@ -5,6 +5,8 @@ services:
     image: fjardim/namenode_sqoop
     container_name: namenode
     hostname: namenode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     volumes:
       - ./data/hdfs/namenode:/hadoop/dfs/name
       - ./input:/input
@@ -23,6 +25,8 @@ services:
     image: fjardim/datanode
     container_name: datanode
     hostname: datanode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     volumes:
       - ./data/hdfs/datanode:/hadoop/dfs/data
     env_file:
@@ -41,6 +45,8 @@ services:
   hive-server:
     image: fjardim/hive
     container_name: hive-server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     hostname: hive_server
     env_file:
       - ./data/hadoop/hadoop-hive.env
@@ -59,6 +65,8 @@ services:
   hive-metastore:
     image: fjardim/hive
     container_name: hive_metastore
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     hostname: hive_metastore
     env_file:
       - ./data/hadoop/hadoop-hive.env
@@ -77,6 +85,8 @@ services:
   hive-metastore-postgresql:
     image: fjardim/hive-metastore
     container_name: hive-metastore-postgresql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  
     hostname: hive_metastore_postgresql
     volumes:
       - ./data/postgresql:/var/lib/postgresql/
@@ -91,6 +101,8 @@ services:
     image: fjardim/mysql
     container_name: database
     hostname: database
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     ports:
         - "33061:3306"
     deploy:
@@ -111,6 +123,8 @@ services:
   zookeeper:
     image: fjardim/zookeeper
     container_name: zookeeper
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     hostname: zookeeper
     ports:
       - "2181:2181"
@@ -125,6 +139,8 @@ services:
     image: fjardim/jupyter-spark
     hostname: spark
     container_name: spark
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     command: notebook
     env_file:
       - ./data/jupyter/jupyter.env
@@ -149,6 +165,8 @@ services:
   kafka:
     image: fjardim/kafka
     container_name: kafka
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     hostname: kafka
     ports:
       - "9092:9092"
@@ -167,6 +185,8 @@ services:
   kafkamanager:
     image: fjardim/kafkamanager
     container_name: kafkamanager
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     hostname: kafkamanager
     environment:
       ZK_HOSTS: zookeeper:2181
@@ -183,6 +203,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
     ports:
       - "9200:9200"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes: 
       - es-data:/usr/share/elasticsearch/data
       - ./settings/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
@@ -196,8 +218,11 @@ services:
     networks: 
       - elastic
 
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     volumes: 
       - ./settings/kibana.yml:/usr/share/kibana/config/kibana.yml:ro   
     ports:
@@ -209,6 +234,8 @@ services:
   
   logstash:
     image: docker.elastic.co/logstash/logstash:7.9.2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
     volumes:
       - ./pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
       - ./settings/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
