@@ -34,7 +34,7 @@ A solução foi realizada em um Jupyter Notebook com PySpark, o arquivo está lo
 - Docker Compose
 - unrar (Instalar no Container Spark)
 
-### **Passos para inciar o ambiente:**
+### **Instruções para inciar o ambiente:**
 + Nota: meu ambiente foi com WSL2
 - Baixar o projeto no diretório desejado:
 ```python
