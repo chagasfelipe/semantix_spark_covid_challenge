@@ -72,8 +72,8 @@ $ pip install rarfile
 ```
 
 - Validar se o Elasticsearch está no ar:
- + Elasticsearch: http://localhost:9200/
- + Kibana: http://localhost:5601/
+  + Elasticsearch: http://localhost:9200/
+  + Kibana: http://localhost:5601/
 
 - Acessar o Jupyter Spark http://localhost:8889/
   + Importar o arquivo solucao_spark_nivel_basico.ipynb localizado na pasta solution_notebooks:
