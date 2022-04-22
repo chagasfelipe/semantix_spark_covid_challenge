@@ -58,7 +58,7 @@ $ docker cp libs/elasticsearch-spark-20_2.11-8.1.3.jar spark:/opt/spark/jars
 $ docker-compose up -d
 ```
 
--Acessar o container Docker do Spark:
+- Acessar o container Docker do Spark:
 ```python
 $ docker exec -it spark bash
 ```
