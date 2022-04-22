@@ -81,7 +81,7 @@ $ pip install rarfile
 
 
 ### **Acesso WebUI dos Frameworks**
-- HDFS http://localhost:50070
-- Kafka Manager http://localhost:9000
-- ElasticSearch(Kibana): http://localhost:5601
-- Jupyter Spark http://localhost:8889/
+- HDFS:  http://localhost:50070
+- Kafka Manager: http://localhost:9000
+- ElasticSearch (Kibana): http://localhost:5601
+- Jupyter Spark: http://localhost:8889/
