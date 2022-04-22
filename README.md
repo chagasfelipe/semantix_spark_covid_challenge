@@ -29,7 +29,7 @@ Escopo da Solução Nível Básico disponível no arquivo em files/escopo_projet
 A solução foi realizada em um Jupyter Notebook com PySpark, o arquivo está localizado no diretório solution_notebooks/:
 + [link do notebook solução nível básico](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_basico.ipynb).
 
-#### **Requisitos para quem deseja reproduzir a solução:**
+### **Requisitos para quem deseja reproduzir a solução:**
 - Docker 
 - Docker Compose
 - unrar (Instalar no Container Spark)
