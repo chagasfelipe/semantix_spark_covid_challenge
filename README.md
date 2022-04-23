@@ -89,6 +89,9 @@ Escopo da Solução Nível Avançado disponível no arquivo em files/escopo_proj
 A solução foi realizada em um Jupyter Notebook com PySpark, onde os dados foram coletados através do consumo via API, o arquivo está localizado no diretório solution_notebooks/:
 + [link do notebook solução Nível Avançado](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_avancado.ipynb).
 
+### **Diagrama Solução Nível Avançado:**
+![](https://raw.githubusercontent.com/chagasfelipe/semantix_spark_covid_challenge/main/img/diagrama_nivel_avancado.png)
+
 ### **Requisitos para quem deseja reproduzir a solução:**
 - Docker 
 - Docker Compose
@@ -125,8 +128,6 @@ $ docker-compose up -d
 
   + *Disclaimer: Foi utilizada a biblioteca requests pois não consegui conectar via Elasticsearch com o PySpark na api da covid na AWS, por algum parâmetro ausente não consigo enxergar o Host pela biblioteca da Elasticsearch para Spark.*
 
-### **Diagrama Solução Nível Avançado:**
-![](https://raw.githubusercontent.com/chagasfelipe/semantix_spark_covid_challenge/main/img/diagrama_nivel_avancado.png)
 
 ### **Acesso WebUI dos Frameworks**
 - HDFS:  http://localhost:50070
