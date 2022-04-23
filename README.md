@@ -30,7 +30,7 @@ A solução foi realizada em um Jupyter Notebook com PySpark, o arquivo está lo
 + [link do notebook solução nível básico](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_basico.ipynb).
 
 ### **Diagrama Solução Nível Básico:**
-![](https://raw.githubusercontent.com/chagasfelipe/semantix_spark_covid_challenge/main/img/diagrama_solucao_nivel_basico.png)
+![](https://raw.githubusercontent.com/chagasfelipe/semantix_spark_covid_challenge/main/img/diagrama_nivel_basico.png)
 ### **Requisitos para quem deseja reproduzir a solução:**
 - Docker 
 - Docker Compose
