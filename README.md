@@ -81,6 +81,53 @@ $ pip install rarfile
   + Importar o arquivo solucao_spark_nivel_basico.ipynb localizado na pasta solution_notebooks:
     + [Link do solucao_spark_nivel_basico.ipynb](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_basico.ipynb).
 
+## **SOLUÇÃO NÍVEL AVANÇADO**
+
+Escopo da Solução Nível Avançado disponível no arquivo em files/escopo_projeto_final_spark.pdf:
+- [Link para Acesso ao Escopo do Nível Básico](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/files/escopo_projeto_final_spark.pdf)
+
+A solução foi realizada em um Jupyter Notebook com PySpark, onde os dados foram coletados através do consumo via API, o arquivo está localizado no diretório solution_notebooks/:
++ [link do notebook solução Nível Avançado](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_avancado.ipynb).
+
+### **Diagrama Solução Nível Avançado:**
+![](https://raw.githubusercontent.com/chagasfelipe/semantix_spark_covid_challenge/main/img/diagrama_nivel_avancado.png)
+
+### **Requisitos para quem deseja reproduzir a solução:**
+- Docker 
+- Docker Compose
+- unrar (Instalar no Container Spark)
+
+### **Instruções para inciar o ambiente:**
++ Nota: meu ambiente foi com WSL2
+- Baixar o projeto no diretório desejado:
+```python
+git clone https://github.com/chagasfelipe/semantix_spark_covid_challenge.git
+```
+- Acessar o diretório /source:
+```python
+$ cd source
+```
+- Para o funcionamento do Elasticsearch, setar vm.max_map_count:
+```python
+$ sudo sysctl -w vm.max_map_count=262144
+```
+- Importar bibliotecas parquet-hadoop e elasticsearch-spark para o container do spark:
+```python
+$ docker cp libs/parquet-hadoop-bundle-1.6.0.jar spark:/opt/spark/jars
+$ docker cp libs/elasticsearch-spark-20_2.11-8.1.3.jar spark:/opt/spark/jars
+```
+- Iniciar o cluster Big Data com o docker-compose:
+```python
+$ docker-compose up -d
+```
+
+- Acessar o Jupyter Spark http://localhost:8889/
+  + Importar o arquivo solucao_spark_nivel_basico.ipynb localizado na pasta solution_notebooks:
+    + [Link do solucao_spark_nivel_avancado.ipynb](https://github.com/chagasfelipe/semantix_spark_covid_challenge/blob/main/solution_notebooks/solucao_spark_nivel_avancado.ipynb).
+
+
+  + *Disclaimer: Foi utilizada a biblioteca requests pois não consegui conectar via Elasticsearch com o PySpark na api da covid na AWS, por algum parâmetro ausente não consigo enxergar o Host pela biblioteca da Elasticsearch para Spark.*
+
 
 ### **Acesso WebUI dos Frameworks**
 - HDFS:  http://localhost:50070
